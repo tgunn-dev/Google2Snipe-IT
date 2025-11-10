@@ -205,7 +205,14 @@ def create_hardware(asset_tag, status_name, model_name, macAddress, createdDate,
     #     userId = None
 
     try:
-        status_id = Config.SNIPE_IT_DEFAULT_STATUS_ID if status_name == Config.SNIPE_IT_ACTIVE_STATUS else get_status_id(status_name, api_key)
+        if status_name == Config.SNIPE_IT_ACTIVE_STATUS:
+            status_id = Config.SNIPE_IT_DEFAULT_STATUS_ID
+        else:
+            status_id = get_status_id(status_name, api_key)
+            # Fallback to default if status not found
+            if status_id is None:
+                tqdm.write(f"Status '{status_name}' not found in Snipe-IT. Using default status.")
+                status_id = Config.SNIPE_IT_DEFAULT_STATUS_ID
     except Exception as e:
         tqdm.write(f"Status lookup failed: {e}")
         logger.error(f"Status lookup error for status_name '{status_name}': {e}")
@@ -334,6 +341,11 @@ def get_model_id(name: str, api_key: str, base_url: str = base_url):
   import json
   from tqdm import tqdm
 
+  # Handle None input early
+  if name is None:
+    tqdm.write("Model name is None. Returning None.")
+    return None
+
   url = f"{base_url}/models?search={name}"
 
   headers = {
@@ -378,6 +390,11 @@ def get_status_id(name: str, api_key: str, base_url: str = base_url):
         int: The ID of the status if found, otherwise None.
     """
 
+    # Handle None input early
+    if name is None:
+        tqdm.write("Status name is None. Using default status.")
+        return None
+
     # Construct the API endpoint URL
     url = f"{base_url}/statuslabels"
 
@@ -401,7 +418,7 @@ def get_status_id(name: str, api_key: str, base_url: str = base_url):
             if data['rows']:
                 return data['rows'][0]['id']
             else:
-                tqdm.write(f"No status found with name: {name}")
+                tqdm.write(f"No status found with name: {name}. Using default status.")
                 return None
         else:
             tqdm.write(f"API request failed with status code: {response.status_code}")

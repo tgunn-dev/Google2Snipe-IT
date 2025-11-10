@@ -423,9 +423,6 @@ Environment="PATH=%VENV_BIN%:$PATH"
 ExecStart=%VENV_BIN%/python %SCRIPT_DIR%/snipe-IT.py
 StandardOutput=journal
 StandardError=journal
-
-[Install]
-WantedBy=multi-user.target
 SYSTEMD_SERVICE
     )
 
