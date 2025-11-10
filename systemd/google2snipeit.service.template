@@ -25,6 +25,3 @@ SyslogIdentifier=google2snipeit
 # Resource limits (optional - adjust based on your environment)
 MemoryLimit=512M
 CPUQuota=50%
-
-[Install]
-WantedBy=multi-user.target
