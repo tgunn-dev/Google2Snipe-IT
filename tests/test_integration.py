@@ -12,8 +12,22 @@ from unittest.mock import Mock, patch, MagicMock, call
 import importlib.util
 
 # Setup mock modules for imports
-for name in ['googleAuth', 'gemini']:
+for name in ['googleAuth']:
     sys.modules.setdefault(name, types.ModuleType(name))
+
+# Add gemini module with gemini_prompt function
+if 'gemini' not in sys.modules:
+    gemini_mod = types.ModuleType('gemini')
+    mock_response = MagicMock()
+    mock_response.text = '**Laptop**'
+    gemini_mod.gemini_prompt = MagicMock(return_value=mock_response)
+    sys.modules['gemini'] = gemini_mod
+else:
+    gemini_mod = sys.modules['gemini']
+    if not hasattr(gemini_mod, 'gemini_prompt'):
+        mock_response = MagicMock()
+        mock_response.text = '**Laptop**'
+        gemini_mod.gemini_prompt = MagicMock(return_value=mock_response)
 
 # Dummy dotenv
 dotenv_mod = types.ModuleType('dotenv')

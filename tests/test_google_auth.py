@@ -5,12 +5,41 @@ Tests Google Workspace authentication and ChromeOS device retrieval.
 
 import unittest
 import sys
+import types
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
 from datetime import datetime
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+# Mock dotenv before importing config
+if 'dotenv' not in sys.modules:
+    dotenv_mod = types.ModuleType('dotenv')
+    setattr(dotenv_mod, 'load_dotenv', MagicMock())
+    sys.modules['dotenv'] = dotenv_mod
+
+# Mock google modules before importing googleAuth
+if 'google' not in sys.modules:
+    google_mod = types.ModuleType('google')
+    sys.modules['google'] = google_mod
+
+if 'google.oauth2' not in sys.modules:
+    oauth2_mod = types.ModuleType('google.oauth2')
+    service_account_mod = types.ModuleType('google.oauth2.service_account')
+    service_account_mod.Credentials = MagicMock()
+    oauth2_mod.service_account = service_account_mod
+    sys.modules['google.oauth2'] = oauth2_mod
+    sys.modules['google.oauth2.service_account'] = service_account_mod
+    sys.modules['google'].oauth2 = oauth2_mod
+
+if 'googleapiclient' not in sys.modules:
+    gapi_mod = types.ModuleType('googleapiclient')
+    discovery_mod = types.ModuleType('googleapiclient.discovery')
+    discovery_mod.build = MagicMock()
+    gapi_mod.discovery = discovery_mod
+    sys.modules['googleapiclient'] = gapi_mod
+    sys.modules['googleapiclient.discovery'] = discovery_mod
 
 
 class TestBytesToGB(unittest.TestCase):
