@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock, call
 import importlib.util
 
-# Setup mock modules for imports
+# Setup mock modules for imports FIRST
 for name in ['googleAuth']:
     sys.modules.setdefault(name, types.ModuleType(name))
 
@@ -43,10 +43,14 @@ sys.modules['tqdm'] = tqdm_mod
 # Mock requests
 sys.modules['requests'] = MagicMock()
 
+# Load snipe_it module and register it in sys.modules BEFORE classes use it
 MODULE_PATH = Path(__file__).resolve().parents[1] / 'snipe-IT.py'
 spec = importlib.util.spec_from_file_location('snipe_it', MODULE_PATH)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+
+# Register it in sys.modules so @patch decorators can find it
+sys.modules['snipe_it'] = module
 
 create_hardware = module.create_hardware
 update_hardware = module.update_hardware
