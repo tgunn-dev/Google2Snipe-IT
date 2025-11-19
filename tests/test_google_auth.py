@@ -42,7 +42,7 @@ if 'googleapiclient' not in sys.modules:
     sys.modules['googleapiclient.discovery'] = discovery_mod
 
 
-@unittest.skip("Google Auth tests require special setup and external dependencies - run individually if needed")
+@unittest.skip("Requires googleapiclient library - install with: pip install google-api-python-client")
 class TestBytesToGB(unittest.TestCase):
     """Tests for byte-to-gigabyte conversion utility."""
 
@@ -85,7 +85,6 @@ class TestBytesToGB(unittest.TestCase):
         self.assertEqual(result, 10.0)
 
 
-@unittest.skip("Google Auth tests require special setup and external dependencies - run individually if needed")
 class TestGoogleAuth(unittest.TestCase):
     """Tests for Google Workspace authentication."""
 
@@ -144,7 +143,6 @@ class TestGoogleAuth(unittest.TestCase):
                       call_kwargs['scopes'])
 
 
-@unittest.skip("Google Auth tests require special setup and external dependencies - run individually if needed")
 class TestFetchChromeOSDevices(unittest.TestCase):
     """Tests for ChromeOS device fetching."""
 
