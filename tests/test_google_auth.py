@@ -85,6 +85,7 @@ class TestBytesToGB(unittest.TestCase):
         self.assertEqual(result, 10.0)
 
 
+@unittest.skip("Requires googleapiclient library - install with: pip install google-api-python-client")
 class TestGoogleAuth(unittest.TestCase):
     """Tests for Google Workspace authentication."""
 
@@ -143,6 +144,7 @@ class TestGoogleAuth(unittest.TestCase):
                       call_kwargs['scopes'])
 
 
+@unittest.skip("Requires googleapiclient library - install with: pip install google-api-python-client")
 class TestFetchChromeOSDevices(unittest.TestCase):
     """Tests for ChromeOS device fetching."""
 
